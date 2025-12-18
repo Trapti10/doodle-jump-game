@@ -8,10 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let platforms = []
     let upTimerId
     let downTimerId
-
+    let isJumping = true;
     function createDoodler() {
         grid.appendChild(doodler);
         doodler.classList.add('doodler')
+        doodlerLeftSpace = platforms[0].left;
         doodlerLeftSpace = platforms[0].left;
         doodler.style.left = doodlerLeftSpace + 'px';
 
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fall() {
         clearInterval(upTimerId)
+        isJumping = false;
         downTimerId = setInterval(function () {
             doodlerBottomSpace -= 5
             doodler.style.bottom = doodlerBottomSpace + 'px'
@@ -64,6 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if(doodlerBottomSpace <= 0){
                 gameOver();
             }
+            platforms.forEach(platform =>{
+                if(
+                    (doodlerBottomSpace >= platform.bottom) && 
+                    (doodlerBottomSpace <= platform.bottom +  15) &&
+                    ((doodlerLeftSpace + 60) >= platform.left) &&
+                    (doodlerLeftSpace <= (platform.left + 85)) &&
+                    !isJumping
+                    
+                ) {
+                    jump()
+                }
+            })
         }, 30)
     }
 
@@ -75,16 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function jump() {
         clearInterval(downTimerId)
+        isJumping = true;
         upTimerId = setInterval(function () {
             doodlerBottomSpace += 20
             doodler.style.bottom = doodlerBottomSpace + 'px'
             if (doodlerBottomSpace > 350) {
                 fall();
             }
-
+            
         }, 30)
     }
-
+    
     function control(){
         if(e.key === "ArrowLeft"){
             //move left
@@ -95,6 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else if(e.key === "ArrowUp"){
             // moveStraight
+
+
            
         }
     }
