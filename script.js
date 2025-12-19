@@ -2,13 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector(".grid")
     const doodler = document.createElement('div')
     let doodlerLeftSpace = 50
-    let doodlerBottomSpace = 250
+    let startPoint = 150;
+    let doodlerBottomSpace = startPoint;
     let isGameOver = false;
     let platformCount = 5;
     let platforms = []
     let upTimerId
     let downTimerId
     let isJumping = true;
+    let isGoingLeft  = false;
+    let isGoingRight  = false;
+    let leftTimerId 
+    let rightTimerId 
+
     function createDoodler() {
         grid.appendChild(doodler);
         doodler.classList.add('doodler')
@@ -75,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     !isJumping
                     
                 ) {
+                    startPoint = doodlerBottomSpace;
                     jump()
                 }
             })
@@ -93,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         upTimerId = setInterval(function () {
             doodlerBottomSpace += 20
             doodler.style.bottom = doodlerBottomSpace + 'px'
-            if (doodlerBottomSpace > 350) {
+            if (doodlerBottomSpace > startPoint + 200) {
                 fall();
             }
             
@@ -103,10 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function control(){
         if(e.key === "ArrowLeft"){
             //move left
+            moveLeft()
 
         }
         else if(e.key === "ArrowRight"){
             // move right
+            moveRight()
         }
         else if(e.key === "ArrowUp"){
             // moveStraight
@@ -114,6 +123,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
            
         }
+    }
+
+    function moveLeft(){
+        isGoingLeft  = true;
+        leftTimerId - setInterval(function (){
+            doodlerLeftSpace -= 5
+            doodler.style.left = doodlerLeftSpace + 'px'
+        }, 30)
+    }
+
+    function moveRight(){
+
     }
 
     function start() {
